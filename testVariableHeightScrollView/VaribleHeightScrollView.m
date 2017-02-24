@@ -30,6 +30,8 @@
     self.scrollView.delegate = self;
     self.scrollView.pagingEnabled = self;
     self.scrollView.bounces = NO;
+    [self addSubview:self.scrollView];
+    
     NSLayoutConstraint* topConstraint = [self.scrollView.topAnchor constraintEqualToAnchor:self.topAnchor];
     NSLayoutConstraint* leadingConstraint = [self.scrollView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor];
     NSLayoutConstraint* trailingConstraint = [self.scrollView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor];
@@ -48,11 +50,7 @@
     for (NSInteger i = 0 ; i < 4; i++)
     {
         UIView* subView = [UIView new];
-        NSLayoutConstraint* widthConstraint  = [self.widthAnchor constraintEqualToConstant:width];
-        height = [[UIScreen mainScreen] bounds].size.height/2 + i%2*[[UIScreen mainScreen] bounds].size.height/2;
-        NSLayoutConstraint* heightConstraint  = [self.heightAnchor constraintEqualToAnchor:self.scrollView.heightAnchor multiplier:1];
-        [subView addConstraint:widthConstraint];
-        [subView addConstraint:heightConstraint];
+        subView.translatesAutoresizingMaskIntoConstraints = NO;
         [arrayTotal addObject:subView];
     }
     self.allPages = [NSArray arrayWithArray:arrayTotal];
@@ -84,11 +82,15 @@
     _allPages = allPages;
     
     CGFloat xPos = 0;
+    NSInteger i = 0;
     for (UIView* subView in self.allPages)
     {
-        
-        [self.scrollView addSubview:subView];
+        i++;
         xPos += subView.bounds.size.height;
+        [self.scrollView addSubview:subView];
+        CGFloat height = [[UIScreen mainScreen] bounds].size.height/2 + i%2*[[UIScreen mainScreen] bounds].size.height/2;
+        NSLayoutConstraint* heightConstraint  = [subView.heightAnchor constraintEqualToConstant:height];
+        [self.scrollView addConstraint:heightConstraint];
         NSLayoutConstraint* leadingConstraint = [subView.leadingAnchor constraintEqualToAnchor:self.scrollView.leadingAnchor constant:xPos];
         NSLayoutConstraint* topConstraint = [subView.topAnchor constraintEqualToAnchor:self.scrollView.topAnchor];
         [self.scrollView addConstraint:leadingConstraint];
@@ -129,6 +131,10 @@
     else if (delta < 0)
     {
         nextPageHeight = ((UIView*)self.allPages[self.currentPage - 1]).bounds.size.height;
+    }
+    else
+    {
+        return currentPageHeight;
     }
     
     CGFloat retHeight = currentPageHeight + (nextPageHeight - currentPageHeight)*fabs(delta);
