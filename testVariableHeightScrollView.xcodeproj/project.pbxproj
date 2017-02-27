@@ -14,6 +14,9 @@
 		9982D0411E5FD9EB00378942 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9982D0401E5FD9EB00378942 /* Assets.xcassets */; };
 		9982D0441E5FD9EB00378942 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9982D0421E5FD9EB00378942 /* LaunchScreen.storyboard */; };
 		9982D04D1E5FDA0E00378942 /* VaribleHeightScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9982D04C1E5FDA0E00378942 /* VaribleHeightScrollView.m */; };
+		9982D0531E640F4F00378942 /* TEST_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 9982D0501E640F4F00378942 /* TEST_1.png */; };
+		9982D0541E640F4F00378942 /* TEST_2.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 9982D0511E640F4F00378942 /* TEST_2.JPG */; };
+		9982D0551E640F4F00378942 /* TEST_3.png in Resources */ = {isa = PBXBuildFile; fileRef = 9982D0521E640F4F00378942 /* TEST_3.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +32,9 @@
 		9982D0451E5FD9EB00378942 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9982D04B1E5FDA0E00378942 /* VaribleHeightScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VaribleHeightScrollView.h; sourceTree = "<group>"; };
 		9982D04C1E5FDA0E00378942 /* VaribleHeightScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VaribleHeightScrollView.m; sourceTree = "<group>"; };
+		9982D0501E640F4F00378942 /* TEST_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TEST_1.png; sourceTree = "<group>"; };
+		9982D0511E640F4F00378942 /* TEST_2.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = TEST_2.JPG; sourceTree = "<group>"; };
+		9982D0521E640F4F00378942 /* TEST_3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TEST_3.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +67,9 @@
 		9982D0331E5FD9EB00378942 /* testVariableHeightScrollView */ = {
 			isa = PBXGroup;
 			children = (
+				9982D0501E640F4F00378942 /* TEST_1.png */,
+				9982D0511E640F4F00378942 /* TEST_2.JPG */,
+				9982D0521E640F4F00378942 /* TEST_3.png */,
 				9982D0371E5FD9EB00378942 /* AppDelegate.h */,
 				9982D0381E5FD9EB00378942 /* AppDelegate.m */,
 				9982D03A1E5FD9EB00378942 /* ViewController.h */,
@@ -144,8 +153,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				9982D0441E5FD9EB00378942 /* LaunchScreen.storyboard in Resources */,
+				9982D0531E640F4F00378942 /* TEST_1.png in Resources */,
+				9982D0541E640F4F00378942 /* TEST_2.JPG in Resources */,
 				9982D0411E5FD9EB00378942 /* Assets.xcassets in Resources */,
 				9982D03F1E5FD9EB00378942 /* Main.storyboard in Resources */,
+				9982D0551E640F4F00378942 /* TEST_3.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
