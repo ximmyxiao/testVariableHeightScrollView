@@ -8,13 +8,63 @@
 
 #import "VaribleHeightScrollView.h"
 
+typedef NS_ENUM(NSInteger,PAGE_POSITION) {
+    PAGE_IN_SCROLL_MIDDLE = 0,
+    PAGE_IN_SCROLL_LEFT,
+    PAGE_IN_SCROLL_RIGHT,
+};
 
 @interface VaribleScrollPageView()
+@property(nonatomic,assign) NSInteger index;
 @property(nonatomic,strong) UIImageView* imageView;
+@property(nonatomic,strong) NSLayoutConstraint* leadingConstraint;
+@property(nonatomic,strong) NSLayoutConstraint* trailingConstraint;
+@property(nonatomic,strong) NSLayoutConstraint* rationConstraint;
+@property(nonatomic,assign) PAGE_POSITION position;
+
 @end
 
 @implementation VaribleScrollPageView
 
+- (void)setPosition:(PAGE_POSITION)position
+{
+    NSLog(@"page :%ld, set to %ld",self.index,position);
+    switch (position)
+    {
+        case PAGE_IN_SCROLL_MIDDLE:
+        {
+            [NSLayoutConstraint deactivateConstraints:@[self.rationConstraint]];
+            [NSLayoutConstraint activateConstraints:@[self.leadingConstraint,self.trailingConstraint]];
+//            self.rationConstraint.active = NO;
+//            self.leadingConstraint.active = YES;
+//            self.trailingConstraint.active = YES;
+            break;
+        }
+        case PAGE_IN_SCROLL_LEFT:
+        {
+//            self.rationConstraint.active = YES;
+//            self.leadingConstraint.active = NO;
+//            self.trailingConstraint.active = YES;
+            [NSLayoutConstraint deactivateConstraints:@[self.leadingConstraint]];
+            [NSLayoutConstraint activateConstraints:@[self.rationConstraint,self.trailingConstraint]];
+            break;
+        }
+        case PAGE_IN_SCROLL_RIGHT:
+        {
+//            self.rationConstraint.active = YES;
+//            self.leadingConstraint.active = YES;
+//            self.trailingConstraint.active = NO;
+            [NSLayoutConstraint deactivateConstraints:@[self.trailingConstraint]];
+            [NSLayoutConstraint activateConstraints:@[self.rationConstraint,self.leadingConstraint]];
+            break;
+        }
+            
+        default:
+            break;
+    }
+//    [self setNeedsLayout];
+//    [self layoutIfNeeded];
+}
 - (void)commonInit
 {
     self.clipsToBounds = YES;
@@ -24,14 +74,14 @@
     [self addSubview:self.imageView];
     
     NSLayoutConstraint* topConstraint = [self.imageView.topAnchor constraintEqualToAnchor:self.topAnchor];
-    NSLayoutConstraint* leadingConstraint = [self.imageView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor];
+    self.leadingConstraint = [self.imageView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor];
     NSLayoutConstraint* bottomConstraint = [self.imageView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor];
-    NSLayoutConstraint* trailingConstraint = [self.imageView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor];
-    
+    self.trailingConstraint = [self.imageView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor];
+
     [self addConstraint:topConstraint];
-    [self addConstraint:leadingConstraint];
+    [self addConstraint:self.leadingConstraint];
     [self addConstraint:bottomConstraint];
-    [self addConstraint:trailingConstraint];
+    [self addConstraint:self.trailingConstraint];
 
 }
 
@@ -60,6 +110,12 @@
 {
     _image = image;
     self.imageView.image = image;
+    
+    CGSize size = [self pageSize];
+    self.rationConstraint = [self.imageView.widthAnchor constraintEqualToAnchor:self.imageView.heightAnchor multiplier:size.width/size.height];
+    [self.imageView addConstraint:self.rationConstraint];
+    
+
 }
 
 - (CGSize)pageSize
@@ -126,14 +182,14 @@
 
     
 
-    for (NSInteger i = 0 ; i < 4; i++)
+    for (NSInteger i = 0 ; i < 3; i++)
     {
         height = [[UIScreen mainScreen] bounds].size.height* 0.5*((i%2)*0.3 + 1);
 
         VaribleScrollPageView* subView = [[VaribleScrollPageView alloc] initWithFrame:CGRectMake(0, 0, width, height)];
         subView.translatesAutoresizingMaskIntoConstraints = NO;
         [arrayTotal addObject:subView];
-        
+        subView.index = i;
         NSLayoutConstraint* widthConstaint = [subView.widthAnchor constraintEqualToConstant:width];
 //        NSLayoutConstraint* heightConstraint = [subView.heightAnchor constraintEqualToConstant:height];
         
@@ -263,21 +319,36 @@
 {
     
     CGFloat delta =  (self.scrollView.contentOffset.x - self.currentPage*[[UIScreen mainScreen] bounds].size.width)/[[UIScreen mainScreen] bounds].size.width;
-    CGFloat currentPageHeight = [((VaribleScrollPageView*)self.allPages[self.currentPage]) pageSize].height;
     CGFloat nextPageHeight = 0;
     NSLog(@"delta:%f",delta);
     CGFloat retHeight = 0;
+    VaribleScrollPageView* currentPage = ((VaribleScrollPageView*)self.allPages[self.currentPage]);
+    CGFloat currentPageHeight = [currentPage pageSize].height;
+
     if (delta > 0)
     {
-        nextPageHeight = [((VaribleScrollPageView*)self.allPages[self.currentPage + 1]) pageSize].height;
+        VaribleScrollPageView* pageToShow = ((VaribleScrollPageView*)self.allPages[self.currentPage + 1]);
+        [pageToShow setPosition:PAGE_IN_SCROLL_RIGHT];
+        [currentPage setPosition:PAGE_IN_SCROLL_LEFT];
+
+        nextPageHeight = [pageToShow pageSize].height;
     }
     else if (delta < 0)
     {
-        nextPageHeight = [((VaribleScrollPageView*)self.allPages[self.currentPage - 1]) pageSize].height;
+        VaribleScrollPageView* pageToShow = ((VaribleScrollPageView*)self.allPages[self.currentPage - 1]);
+        [pageToShow setPosition:PAGE_IN_SCROLL_LEFT];
+        [currentPage setPosition:PAGE_IN_SCROLL_RIGHT];
+
+        nextPageHeight = [pageToShow pageSize].height;
     }
     else
     {
         nextPageHeight = currentPageHeight;
+        for (VaribleScrollPageView* page in self.allPages)
+        {
+            [page setPosition:PAGE_IN_SCROLL_MIDDLE];
+
+        }
     }
     
     

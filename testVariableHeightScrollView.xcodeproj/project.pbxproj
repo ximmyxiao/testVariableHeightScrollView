@@ -124,7 +124,7 @@
 				TargetAttributes = {
 					9982D0301E5FD9EB00378942 = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = S99AT867TC;
+						DevelopmentTeam = HVRJ9B7ZD4;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -291,7 +291,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = S99AT867TC;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = HVRJ9B7ZD4;
 				INFOPLIST_FILE = testVariableHeightScrollView/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = sfs.testVariableHeightScrollView;
@@ -303,7 +304,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = S99AT867TC;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = HVRJ9B7ZD4;
 				INFOPLIST_FILE = testVariableHeightScrollView/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = sfs.testVariableHeightScrollView;
@@ -330,6 +332,7 @@
 				9982D04A1E5FD9EB00378942 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
