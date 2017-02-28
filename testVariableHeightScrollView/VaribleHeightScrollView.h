@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface VaribleScrollPageView : UIView
+@interface VariableScrollPageView : UIView
 @property(nonatomic,strong) UIImage* image;
 @end
 

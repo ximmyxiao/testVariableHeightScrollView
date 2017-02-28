@@ -14,7 +14,7 @@ typedef NS_ENUM(NSInteger,PAGE_POSITION) {
     PAGE_IN_SCROLL_RIGHT,
 };
 
-@interface VaribleScrollPageView()
+@interface VariableScrollPageView()
 @property(nonatomic,assign) NSInteger index;
 @property(nonatomic,strong) UIImageView* imageView;
 @property(nonatomic,strong) NSLayoutConstraint* leadingConstraint;
@@ -24,7 +24,7 @@ typedef NS_ENUM(NSInteger,PAGE_POSITION) {
 
 @end
 
-@implementation VaribleScrollPageView
+@implementation VariableScrollPageView
 
 - (void)setPosition:(PAGE_POSITION)position
 {
@@ -186,7 +186,7 @@ typedef NS_ENUM(NSInteger,PAGE_POSITION) {
     {
         height = [[UIScreen mainScreen] bounds].size.height* 0.5*((i%2)*0.3 + 1);
 
-        VaribleScrollPageView* subView = [[VaribleScrollPageView alloc] initWithFrame:CGRectMake(0, 0, width, height)];
+        VariableScrollPageView* subView = [[VariableScrollPageView alloc] initWithFrame:CGRectMake(0, 0, width, height)];
         subView.translatesAutoresizingMaskIntoConstraints = NO;
         [arrayTotal addObject:subView];
         subView.index = i;
@@ -252,7 +252,7 @@ typedef NS_ENUM(NSInteger,PAGE_POSITION) {
     NSInteger i = 0;
     UIView* lastSubview = nil;
     CGFloat height = 0;
-    for (VaribleScrollPageView* subView in self.allPages)
+    for (VariableScrollPageView* subView in self.allPages)
     {
         i++;
         [self.scrollView addSubview:subView];
@@ -322,12 +322,12 @@ typedef NS_ENUM(NSInteger,PAGE_POSITION) {
     CGFloat nextPageHeight = 0;
     NSLog(@"delta:%f",delta);
     CGFloat retHeight = 0;
-    VaribleScrollPageView* currentPage = ((VaribleScrollPageView*)self.allPages[self.currentPage]);
+    VariableScrollPageView* currentPage = ((VariableScrollPageView*)self.allPages[self.currentPage]);
     CGFloat currentPageHeight = [currentPage pageSize].height;
 
     if (delta > 0)
     {
-        VaribleScrollPageView* pageToShow = ((VaribleScrollPageView*)self.allPages[self.currentPage + 1]);
+        VariableScrollPageView* pageToShow = ((VariableScrollPageView*)self.allPages[self.currentPage + 1]);
         [pageToShow setPosition:PAGE_IN_SCROLL_RIGHT];
         [currentPage setPosition:PAGE_IN_SCROLL_LEFT];
 
@@ -335,7 +335,7 @@ typedef NS_ENUM(NSInteger,PAGE_POSITION) {
     }
     else if (delta < 0)
     {
-        VaribleScrollPageView* pageToShow = ((VaribleScrollPageView*)self.allPages[self.currentPage - 1]);
+        VariableScrollPageView* pageToShow = ((VariableScrollPageView*)self.allPages[self.currentPage - 1]);
         [pageToShow setPosition:PAGE_IN_SCROLL_LEFT];
         [currentPage setPosition:PAGE_IN_SCROLL_RIGHT];
 
@@ -344,7 +344,7 @@ typedef NS_ENUM(NSInteger,PAGE_POSITION) {
     else
     {
         nextPageHeight = currentPageHeight;
-        for (VaribleScrollPageView* page in self.allPages)
+        for (VariableScrollPageView* page in self.allPages)
         {
             [page setPosition:PAGE_IN_SCROLL_MIDDLE];
 
