@@ -182,7 +182,7 @@ typedef NS_ENUM(NSInteger,PAGE_POSITION) {
 
     
 
-    for (NSInteger i = 0 ; i < 3; i++)
+    for (NSInteger i = 0 ; i < 9; i++)
     {
         height = [[UIScreen mainScreen] bounds].size.height* 0.5*((i%2)*0.3 + 1);
 
@@ -196,29 +196,9 @@ typedef NS_ENUM(NSInteger,PAGE_POSITION) {
         
         [subView addConstraint:widthConstaint];
 //        [subView addConstraint:heightConstraint];
-        
-        if (i == 0)
-        {
-            subView.image = [UIImage imageNamed:@"TEST_1"];
-            subView.backgroundColor = [UIColor redColor];
-        }
-        else if (i== 1)
-        {
-            subView.image = [UIImage imageNamed:@"TEST_2.JPG"];
-            subView.backgroundColor = [UIColor blueColor];
-            
-        }
-        else if (i == 2)
-        {
-            subView.image = [UIImage imageNamed:@"TEST_3"];
-            subView.backgroundColor = [UIColor blackColor];
-            
-        }
-        else
-        {
-            subView.backgroundColor = [UIColor yellowColor];
-            
-        }
+        NSString* imageName = [NSString stringWithFormat:@"%ld.jpg",i+1];
+        subView.image = [UIImage imageNamed:imageName];
+
     }
     self.allPages = [NSArray arrayWithArray:arrayTotal];
 }
