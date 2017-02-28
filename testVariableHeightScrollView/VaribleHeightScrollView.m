@@ -17,8 +17,10 @@
 
 - (void)commonInit
 {
+    self.clipsToBounds = YES;
     self.imageView = [UIImageView new];
     self.imageView.translatesAutoresizingMaskIntoConstraints = NO;
+//    self.imageView.contentMode = UIViewContentModeScaleAspectFill;
     [self addSubview:self.imageView];
     
     NSLayoutConstraint* topConstraint = [self.imageView.topAnchor constraintEqualToAnchor:self.topAnchor];
@@ -52,14 +54,30 @@
     }
     return self;
 }
-- (CGSize)intrinsicContentSize
-{
-    return self.image.size;
-}
+
 
 - (void)setImage:(UIImage *)image
 {
     _image = image;
+    self.imageView.image = image;
+}
+
+- (CGSize)pageSize
+{
+    if (self.image)
+    {
+        CGFloat aspectRation = self.image.size.height/self.image.size.width;
+        CGFloat desireHeight = aspectRation*(self.image.scale)*[UIScreen mainScreen].bounds.size.width;
+        if (desireHeight > [UIScreen mainScreen].bounds.size.width*1.33)
+        {
+            desireHeight = [UIScreen mainScreen].bounds.size.width*1.33;
+        }
+        return CGSizeMake([UIScreen mainScreen].bounds.size.width, desireHeight);
+    }
+    else
+    {
+        return CGSizeMake([UIScreen mainScreen].bounds.size.width,[UIScreen mainScreen].bounds.size.width);
+    }
 }
 
 
@@ -69,6 +87,7 @@
 @property(nonatomic,strong) UIScrollView* scrollView;
 @property(nonatomic,strong) NSArray* allPages;
 @property(nonatomic,assign) NSInteger currentPage;
+@property(nonatomic,strong) NSLayoutConstraint* selfHeightConstraint;
 @end
 
 @implementation VaribleHeightScrollView
@@ -111,28 +130,31 @@
     {
         height = [[UIScreen mainScreen] bounds].size.height* 0.5*((i%2)*0.3 + 1);
 
-        UIView* subView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, width, height)];
+        VaribleScrollPageView* subView = [[VaribleScrollPageView alloc] initWithFrame:CGRectMake(0, 0, width, height)];
         subView.translatesAutoresizingMaskIntoConstraints = NO;
         [arrayTotal addObject:subView];
         
         NSLayoutConstraint* widthConstaint = [subView.widthAnchor constraintEqualToConstant:width];
-        NSLayoutConstraint* heightConstraint = [subView.heightAnchor constraintEqualToConstant:height];
+//        NSLayoutConstraint* heightConstraint = [subView.heightAnchor constraintEqualToConstant:height];
         
         
         [subView addConstraint:widthConstaint];
-        [subView addConstraint:heightConstraint];
+//        [subView addConstraint:heightConstraint];
         
         if (i == 0)
         {
+            subView.image = [UIImage imageNamed:@"TEST_1"];
             subView.backgroundColor = [UIColor redColor];
         }
         else if (i== 1)
         {
+            subView.image = [UIImage imageNamed:@"TEST_2.JPG"];
             subView.backgroundColor = [UIColor blueColor];
             
         }
         else if (i == 2)
         {
+            subView.image = [UIImage imageNamed:@"TEST_3"];
             subView.backgroundColor = [UIColor blackColor];
             
         }
@@ -172,20 +194,36 @@
     
     CGFloat xPos = 0;
     NSInteger i = 0;
+    UIView* lastSubview = nil;
     CGFloat height = 0;
-    for (UIView* subView in self.allPages)
+    for (VaribleScrollPageView* subView in self.allPages)
     {
         i++;
         [self.scrollView addSubview:subView];
 
 
-
+        
         NSLayoutConstraint* leadingConstraint = [subView.leadingAnchor constraintEqualToAnchor:self.scrollView.leadingAnchor constant:xPos];
+        if (lastSubview == nil)
+        {
+            leadingConstraint = [subView.leadingAnchor constraintEqualToAnchor:self.scrollView.leadingAnchor constant:xPos];
+        }
+        else
+        {
+            leadingConstraint = [subView.leadingAnchor constraintEqualToAnchor:lastSubview.trailingAnchor];
+        }
+        
+        lastSubview = subView;
         NSLayoutConstraint* topConstraint = [subView.topAnchor constraintEqualToAnchor:self.scrollView.topAnchor];
+        NSLayoutConstraint* heightConstraint = [subView.heightAnchor constraintEqualToAnchor:self.heightAnchor];
         [self.scrollView addConstraint:leadingConstraint];
         [self.scrollView addConstraint:topConstraint];
+        [self addConstraint:heightConstraint];
         
-        xPos += [UIScreen mainScreen].bounds.size.width;
+        CGSize pageSize = [subView pageSize];
+        NSLayoutConstraint* ratioConstraint = [subView.widthAnchor constraintEqualToAnchor:subView.heightAnchor multiplier:pageSize.width/pageSize.height];
+//        [subView addConstraint:ratioConstraint];
+//        xPos += [UIScreen mainScreen].bounds.size.width;
 
         self.scrollView.contentSize = CGSizeMake([UIScreen mainScreen].bounds.size.width*i, 0);
     }
@@ -225,30 +263,40 @@
 {
     
     CGFloat delta =  (self.scrollView.contentOffset.x - self.currentPage*[[UIScreen mainScreen] bounds].size.width)/[[UIScreen mainScreen] bounds].size.width;
-    CGFloat currentPageHeight = ((UIView*)self.allPages[self.currentPage]).bounds.size.height;
+    CGFloat currentPageHeight = [((VaribleScrollPageView*)self.allPages[self.currentPage]) pageSize].height;
     CGFloat nextPageHeight = 0;
     NSLog(@"delta:%f",delta);
+    CGFloat retHeight = 0;
     if (delta > 0)
     {
-        nextPageHeight = ((UIView*)self.allPages[self.currentPage + 1]).bounds.size.height;
+        nextPageHeight = [((VaribleScrollPageView*)self.allPages[self.currentPage + 1]) pageSize].height;
     }
     else if (delta < 0)
     {
-        nextPageHeight = ((UIView*)self.allPages[self.currentPage - 1]).bounds.size.height;
+        nextPageHeight = [((VaribleScrollPageView*)self.allPages[self.currentPage - 1]) pageSize].height;
     }
     else
     {
-        return currentPageHeight;
+        nextPageHeight = currentPageHeight;
     }
     
-    CGFloat retHeight = currentPageHeight + (nextPageHeight - currentPageHeight)*fabs(delta);
+    
+    
+    retHeight = currentPageHeight + (nextPageHeight - currentPageHeight)*fabs(delta);
+    
+
     return retHeight;
 }
 
 - (CGSize)intrinsicContentSize
 {
+    [self removeConstraint:self.selfHeightConstraint];
     CGFloat height = [self calcCurrentHeight];
     NSLog(@"scroll intrinsic height:%f",height);
+
+    
+    self.selfHeightConstraint = [self.heightAnchor constraintEqualToConstant:height];
+    [self addConstraint:self.selfHeightConstraint];
     return CGSizeMake(self.bounds.size.width, height);
 }
 
